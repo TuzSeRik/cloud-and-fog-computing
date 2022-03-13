@@ -1,1 +1,1 @@
-ÿþ
+This is main branch of a project. It do not contains anything, because of the nature of Azure deployment it is not possible to host several services in one branch and do not suffer from the need to create and maintain a big deploy config file.
