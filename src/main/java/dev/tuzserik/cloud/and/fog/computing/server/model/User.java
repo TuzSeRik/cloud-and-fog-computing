@@ -8,7 +8,8 @@ import javax.persistence.Id;
 @Entity @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class User {
     private @Id String id;
-    private boolean isImported;
+    private String password;
+    private boolean isImported = false;
     private String email;
     private String givenName;
     private String lastName;

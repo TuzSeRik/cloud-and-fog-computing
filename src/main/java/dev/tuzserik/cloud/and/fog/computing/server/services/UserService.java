@@ -10,9 +10,10 @@ public class UserService {
     private UserRepository userRepository;
 
     public User getUserById(String id) {
-        if (userRepository.existsById(id))
-            return userRepository.getById(id);
-        else
-            return userRepository.save(new User().setId(id));
+        return userRepository.getById(id);
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }

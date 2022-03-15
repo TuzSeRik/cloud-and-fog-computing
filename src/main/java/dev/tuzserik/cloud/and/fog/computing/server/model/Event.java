@@ -6,19 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data @AllArgsConstructor @NoArgsConstructor @Entity
 public class Event {
-    private UUID eventId = UUID.randomUUID();
+    private @Id UUID eventId = UUID.randomUUID();
     private String userId;
     private String summary;
     private String description;
     private String startTimeString = ZonedDateTime.now().toLocalDateTime().toString();
     private String endTimeString = ZonedDateTime.now().plusMinutes(30).toLocalDateTime().toString();
-    private List<String> attendees;
     private String location;
 
     @JsonIgnore

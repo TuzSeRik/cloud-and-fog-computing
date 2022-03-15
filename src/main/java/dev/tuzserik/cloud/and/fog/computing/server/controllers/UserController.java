@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     UserService userService;
 
+    @PostMapping("/api/user")
+    public ResponseEntity<StatusResponse> registerUser(@RequestParam String id) {
+        return new ResponseEntity<>(
+                new StatusResponse().setId(userService.saveUser(new User().setId(id)).getId()),
+                HttpStatus.OK
+        );
+    }
+
     @GetMapping("/api/user")
-    public ResponseEntity<StatusResponse> showUserStatus(@RequestParam String id) {
+    public ResponseEntity<StatusResponse> updateUser(@RequestParam String id) {
         User user = userService.getUserById(id);
 
         return new ResponseEntity<>(
-                new StatusResponse().setId(user.getId()).setImported(user.isImported()),
+                new StatusResponse().setId(user.getId()).setImported(true),
                 HttpStatus.OK
         );
     }

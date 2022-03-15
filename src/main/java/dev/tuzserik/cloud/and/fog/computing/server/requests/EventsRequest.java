@@ -3,8 +3,10 @@ package dev.tuzserik.cloud.and.fog.computing.server.requests;
 import dev.tuzserik.cloud.and.fog.computing.server.model.Event;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class EventRequest {
+public class EventsRequest {
     private String userId;
-    private Event event;
+    private List<Event> events;
 }
