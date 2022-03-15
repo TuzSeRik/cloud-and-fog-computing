@@ -12,23 +12,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 public class ApiController {
-    private final WebClient mapsApiCoordinates =
-            WebClient.create("https://atlas.microsoft.com/search/fuzzy/JSON?" +
-                    "api-version=1.0&country-set=RU&subscription-key=6E0PkW-O9io3uncolW4Gr5LJ_HaB9K1Jcf67f13kL1g&" +
-                    "query=");
-    private final WebClient mapsApiTravelTime =
-            WebClient.create("https://atlas.microsoft.com/route/directions/JSON?" +
-                    "api-version=1.0&subscription-key=6E0PkW-O9io3uncolW4Gr5LJ_HaB9K1Jcf67f13kL1g&" +
-                    "query=");
+    private final WebClient azure = WebClient.create("https://atlas.microsoft.com");
 
     @GetMapping("/api/time")
     public ResponseEntity<TravelTimeResponse> getTravelTime(@RequestParam String from,
                                                             @RequestParam String to) {
         try {
             CoordinatesApiResponse.Element.CoordinatePair fromCoordinates =
-                    mapsApiCoordinates
+                    azure
                             .get()
-                            .uri(from)
+                            .uri(builder -> builder.pathSegment("search", "fuzzy", "JSON")
+                                    .queryParam("api-version", "1.0")
+                                    .queryParam("country-set", "RU")
+                                    .queryParam("subscription-key", "6E0PkW-O9io3uncolW4Gr5LJ_HaB9K1Jcf67f13kL1g")
+                                    .queryParam("query", from)
+                                    .build()
+                            )
                             .retrieve()
                             .bodyToMono(CoordinatesApiResponse.class)
                             .block()
@@ -36,37 +35,49 @@ public class ApiController {
                             .get(0)
                             .position;
 
-//            CoordinatesApiResponse.Element.CoordinatePair toCoordinates =
-//                    mapsApiCoordinates
-//                            .get()
-//                            .uri(to)
-//                            .retrieve()
-//                            .bodyToMono(CoordinatesApiResponse.class)
-//                            .block()
-//                            .results
-//                            .get(0)
-//                            .position;
+            CoordinatesApiResponse.Element.CoordinatePair toCoordinates =
+                    azure
+                            .get()
+                            .uri(builder -> builder.pathSegment("search", "fuzzy", "JSON")
+                                    .queryParam("api-version", "1.0")
+                                    .queryParam("country-set", "RU")
+                                    .queryParam("subscription-key", "6E0PkW-O9io3uncolW4Gr5LJ_HaB9K1Jcf67f13kL1g")
+                                    .queryParam("query", to)
+                                    .build()
+                            )
+                            .retrieve()
+                            .bodyToMono(CoordinatesApiResponse.class)
+                            .block()
+                            .results
+                            .get(0)
+                            .position;
 
             return new ResponseEntity<>(
                     new TravelTimeResponse().setMinutes(
-//                            mapsApiTravelTime
-//                                    .get()
-//                                    .uri(fromCoordinates.toString() + ":" + toCoordinates.toString())
-//                                    .retrieve()
-//                                    .bodyToMono(TravelTimeApiResponse.class)
-//                                    .block()
-//                                    .routes
-//                                    .get(0)
-//                                    .legs
-//                                    .get(0)
-//                                    .summary
-//                                    .travelTimeInSeconds / 60
-                            3
+                            azure
+                                    .get()
+                                    .uri(builder -> builder.pathSegment("route", "directions", "JSON")
+                                            .queryParam("api-version", "1.0")
+                                            .queryParam("country-set", "RU")
+                                            .queryParam("subscription-key", "6E0PkW-O9io3uncolW4Gr5LJ_HaB9K1Jcf67f13kL1g")
+                                            .queryParam("query", fromCoordinates.toString() + ":" + toCoordinates.toString())
+                                            .build()
+                                    )
+                                    .retrieve()
+                                    .bodyToMono(TravelTimeApiResponse.class)
+                                    .block()
+                                    .routes
+                                    .get(0)
+                                    .legs
+                                    .get(0)
+                                    .summary
+                                    .travelTimeInSeconds / 60
                     ),
                     HttpStatus.OK
             );
         }
         catch (Exception exception) {
+            exception.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

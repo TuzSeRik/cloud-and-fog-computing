@@ -9,15 +9,15 @@ public class TravelTimeApiResponse {
     public List<Route> routes;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Route {
+    public static class Route {
         public List<Leg> legs;
 
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public class Leg {
+        public static class Leg {
             public Summary summary;
 
             @JsonIgnoreProperties(ignoreUnknown = true)
-            public class Summary {
+            public static class Summary {
                 public int travelTimeInSeconds;
             }
         }

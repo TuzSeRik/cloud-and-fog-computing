@@ -9,11 +9,11 @@ public class CoordinatesApiResponse {
     public List<Element> results;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Element {
+    public static class Element {
         public CoordinatePair position;
 
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public class CoordinatePair {
+        public static class CoordinatePair {
             public String lat;
             public String lon;
 
